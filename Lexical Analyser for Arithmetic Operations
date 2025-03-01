@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <ctype.h>
+
+void processOperator(char ch);
+
+int main() {
+    char ch;
+    
+    printf("Enter an expression: ");
+    
+    // Read each character until the end of the input
+    while ((ch = getchar()) != EOF) {
+        // Process only the arithmetic operators
+        if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+            processOperator(ch);
+        }
+        // Ignore non-operator characters, including whitespaces
+        else if (isspace(ch)) {
+            continue;
+        }
+    }
+
+    return 0;
+}
+
+// Function to process and identify the operators
+void processOperator(char ch) {
+    switch (ch) {
+        case '+':
+            printf("Operator: +\n");
+            break;
+        case '-':
+            printf("Operator: -\n");
+            break;
+        case '*':
+            printf("Operator: *\n");
+            break;
+        case '/':
+            printf("Operator: /\n");
+            break;
+        default:
+            // This should never be reached since we already check for operators
+            printf("Unknown operator\n");
+            break;
+    }
+}
