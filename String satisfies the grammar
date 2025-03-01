@@ -1,0 +1,113 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+
+#define MAX_LEN 100
+
+// Input string
+char input[MAX_LEN];
+int pos = 0;
+
+// Function prototypes
+int S();
+int E();
+int T();
+int F();
+
+// Function to get the current character
+char currentChar() {
+    return input[pos];
+}
+
+// Function to consume the current character and move to the next character
+void consume() {
+    pos++;
+}
+
+// Function to check if the current character is a valid identifier (e.g., a variable name)
+int isIdentifier(char c) {
+    return isalpha(c);  // Identifier starts with an alphabet character
+}
+
+// Function to match and consume an identifier (variable name)
+int matchId() {
+    if (isIdentifier(currentChar())) {
+        consume();
+        return 1;
+    }
+    return 0;
+}
+
+// Function to match and consume a specific character
+int matchChar(char c) {
+    if (currentChar() == c) {
+        consume();
+        return 1;
+    }
+    return 0;
+}
+
+// Function to parse the 'S' (start symbol) -> E
+int S() {
+    return E();
+}
+
+// Function to parse the 'E' (expression) -> E + T | T
+int E() {
+    if (T()) {
+        if (matchChar('+')) {
+            if (E()) {
+                return 1;
+            }
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+// Function to parse the 'T' (term) -> T * F | F
+int T() {
+    if (F()) {
+        if (matchChar('*')) {
+            if (T()) {
+                return 1;
+            }
+            return 0;
+        }
+        return 1;
+    }
+    return 0;
+}
+
+// Function to parse the 'F' (factor) -> (E) | id
+int F() {
+    if (matchChar('(')) {
+        if (E()) {
+            if (matchChar(')')) {
+                return 1;
+            }
+            return 0;
+        }
+        return 0;
+    }
+    if (matchId()) {
+        return 1;
+    }
+    return 0;
+}
+
+// Main function to read input and validate the string
+int main() {
+    printf("Enter the input string: ");
+    fgets(input, MAX_LEN, stdin);
+    input[strcspn(input, "\n")] = '\0';  // Remove trailing newline from fgets input
+
+    if (S() && currentChar() == '\0') {
+        printf("The string satisfies the grammar.\n");
+    } else {
+        printf("The string does not satisfy the grammar.\n");
+    }
+
+    return 0;
+}
