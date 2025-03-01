@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_PRODUCTIONS 10
+#define MAX_RULE_LENGTH 100
+
+// Function to remove left recursion
+void eliminateLeftRecursion(char nonTerminal, char productions[MAX_PRODUCTIONS][MAX_RULE_LENGTH], int numProductions) {
+    char newNonTerminal = nonTerminal + 1;  // Create new non-terminal (e.g., A -> A')
+    
+    printf("\nEliminated Grammar:\n");
+    
+    // Process each production of the non-terminal
+    for (int i = 0; i < numProductions; i++) {
+        // Check if the production starts with the non-terminal (left recursion)
+        if (productions[i][0] == nonTerminal) {
+            // This is a left-recursive production, handle it
+            char alpha[MAX_RULE_LENGTH];
+            int j = 1;  // Skip the non-terminal symbol
+            
+            // Collect the remaining part of the rule (alpha part of A -> Aα)
+            while (productions[i][j] != '\0' && !isspace(productions[i][j])) {
+                alpha[j - 1] = productions[i][j];
+                j++;
+            }
+            alpha[j - 1] = '\0';
+
+            // Generate the new non-recursive and recursive rules
+            printf("%c -> %s%c\n", nonTerminal, alpha, newNonTerminal);
+            printf("%c -> ε\n", newNonTerminal);  // A' -> ε
+        } else {
+            // This is a non-recursive production, directly use it
+            printf("%c -> %s%c\n", nonTerminal, productions[i], newNonTerminal);
+        }
+    }
+}
+
+int main() {
+    char nonTerminal;
+    char productions[MAX_PRODUCTIONS][MAX_RULE_LENGTH];
+    int numProductions;
+    
+    printf("Enter the non-terminal: ");
+    scanf(" %c", &nonTerminal);
+    
+    printf("Enter the number of productions: ");
+    scanf("%d", &numProductions);
+    
+    // Input the productions for the given non-terminal
+    printf("Enter the productions for %c:\n", nonTerminal);
+    for (int i = 0; i < numProductions; i++) {
+        printf("Production %d: ", i + 1);
+        scanf(" %[^\n]", productions[i]);  // Read the entire line as a production
+    }
+    
+    // Eliminate left recursion
+    eliminateLeftRecursion(nonTerminal, productions, numProductions);
+    
+    return 0;
+}
