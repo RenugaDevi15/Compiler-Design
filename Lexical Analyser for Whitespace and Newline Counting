@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <ctype.h>
+
+int main() {
+    char ch;
+    int whitespaceCount = 0, newlineCount = 0;
+
+    // Prompt the user for input
+    printf("Enter the text (press Ctrl+D or Ctrl+Z to end):\n");
+
+    // Read each character from standard input
+    while ((ch = getchar()) != EOF) {
+        // Check for whitespace characters (space and tab)
+        if (isspace(ch)) {
+            if (ch == ' ' || ch == '\t') {
+                whitespaceCount++; // Increment for space or tab
+            }
+        }
+        
+        // Check for newline character
+        if (ch == '\n') {
+            newlineCount++; // Increment for newline character
+        }
+    }
+
+    // Output the results
+    printf("\nTotal whitespace characters (spaces and tabs): %d\n", whitespaceCount);
+    printf("Total newline characters: %d\n", newlineCount);
+
+    return 0;
+}
