@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_SYMBOLS 100
+#define MAX_NAME_LEN 50
+
+// Structure for storing symbol information
+typedef struct {
+    char name[MAX_NAME_LEN];   // Name of the symbol
+    char type[MAX_NAME_LEN];   // Type of the symbol (int, float, etc.)
+    int memoryLocation;        // Simulated memory location (for demonstration)
+} Symbol;
+
+// Symbol Table Array
+Symbol symbolTable[MAX_SYMBOLS];
+int symbolCount = 0;  // Keeps track of the number of symbols in the table
+
+// Function to insert a symbol into the symbol table
+void insertSymbol(char *name, char *type) {
+    if (symbolCount < MAX_SYMBOLS) {
+        strcpy(symbolTable[symbolCount].name, name);
+        strcpy(symbolTable[symbolCount].type, type);
+        symbolTable[symbolCount].memoryLocation = symbolCount + 1;  // Simulate memory location
+        symbolCount++;
+        printf("Symbol '%s' of type '%s' inserted successfully.\n", name, type);
+    } else {
+        printf("Symbol table is full. Cannot insert more symbols.\n");
+    }
+}
+
+// Function to search for a symbol by its name
+int searchSymbol(char *name) {
+    for (int i = 0; i < symbolCount; i++) {
+        if (strcmp(symbolTable[i].name, name) == 0) {
+            return i;  // Return the index of the found symbol
+        }
+    }
+    return -1;  // Symbol not found
+}
+
+// Function to display the symbol table
+void displaySymbolTable() {
+    if (symbolCount == 0) {
+        printf("Symbol table is empty.\n");
+        return;
+    }
+    
+    printf("\nSymbol Table:\n");
+    printf("-------------------------------------------------\n");
+    printf("| %-15s | %-10s | %-15s |\n", "Symbol Name", "Type", "Memory Location");
+    printf("-------------------------------------------------\n");
+    
+    for (int i = 0; i < symbolCount; i++) {
+        printf("| %-15s | %-10s | %-15d |\n", symbolTable[i].name, symbolTable[i].type, symbolTable[i].memoryLocation);
+    }
+    
+    printf("-------------------------------------------------\n");
+}
+
+// Main function to drive the program
+int main() {
+    int choice;
+    char name[MAX_NAME_LEN], type[MAX_NAME_LEN];
+    
+    while (1) {
+        printf("\nSymbol Table Operations:\n");
+        printf("1. Insert Symbol\n");
+        printf("2. Search Symbol\n");
+        printf("3. Display Symbol Table\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        
+        switch (choice) {
+            case 1:
+                printf("Enter symbol name: ");
+                scanf("%s", name);
+                printf("Enter symbol type: ");
+                scanf("%s", type);
+                insertSymbol(name, type);
+                break;
+            case 2:
+                printf("Enter symbol name to search: ");
+                scanf("%s", name);
+                int index = searchSymbol(name);
+                if (index != -1) {
+                    printf("Symbol '%s' found! Type: '%s', Memory Location: %d\n", symbolTable[index].name, symbolTable[index].type, symbolTable[index].memoryLocation);
+                } else {
+                    printf("Symbol '%s' not found.\n", name);
+                }
+                break;
+            case 3:
+                displaySymbolTable();
+                break;
+            case 4:
+                printf("Exiting...\n");
+                return 0;
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+    
+    return 0;
+}
